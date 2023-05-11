@@ -1,20 +1,42 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from './Header';
 import Footer from './Footer';
 import Note from './Note';
-import notes from '../notes';
+import CreateArea from './CreateArea';
 
 function App(){
+    const [listItem, setListItem] = useState([]);
+
+    function addItem(item){
+        setListItem(previous => {
+            return [
+                ...previous,
+                item
+            ]
+        });
+    }
+
+    function deleteItem(id){
+        setListItem(previous => {
+            return previous.filter((item, index) => {
+                return index !== id
+            });
+        });
+    }
+
     return (
         <div>
             <Header />
-            {notes.map(note => 
+            <CreateArea addList={addItem}/>
+            {listItem.map((item, index) => (
                 <Note   
-                    key={note.id}
-                    title={note.title}
-                    content={note.content}
+                    key={index} 
+                    id={index}
+                    title={item.title} 
+                    content={item.content}
+                    delete={deleteItem}
                 /> 
-            )}
+            ))}
             <Footer />    
         </div>
     );
